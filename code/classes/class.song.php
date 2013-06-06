@@ -8,6 +8,9 @@ class Song {
 	public $ID;
 	public $songtype;
 	public $date_played;
+    public $date_artist_played;
+    public $date_album_played;
+    public $date_title_played;
 	public $duration;
 	public $durationDisplay;
 	public $artist;
@@ -336,6 +339,36 @@ class Song {
 
 		$this->date_played = $date_played;
 	}
+
+    protected function set_date_artist_played($song) {
+        if ($song['DATE_ARTIST_PLAYED'] instanceof DateTime) {
+            $date_artist_played = $song['DATE_ARTIST_PLAYED']->format('Y-m-d H:i:s');
+        } else {
+            $date_artist_played = $song['DATE_ARTIST_PLAYED'];
+        }
+
+        $this->date_artist_played = $date_artist_played;
+    }
+
+    protected function set_date_album_played($song) {
+        if ($song['DATE_ALBUM_PLAYED'] instanceof DateTime) {
+            $date_album_played = $song['DATE_ALBUM_PLAYED']->format('Y-m-d H:i:s');
+        } else {
+            $date_album_played = $song['DATE_ALBUM_PLAYED'];
+        }
+
+        $this->date_album_played = $date_album_played;
+    }
+
+    protected function set_date_title_played($song) {
+        if ($song['DATE_TITLE_PLAYED'] instanceof DateTime) {
+            $date_title_played = $song['DATE_TITLE_PLAYED']->format('Y-m-d H:i:s');
+        } else {
+            $date_title_played = $song['DATE_TITLE_PLAYED'];
+        }
+
+        $this->date_title_played = $date_title_played;
+    }	
 
 	protected function set_buycd($song) {
 		if (empty($song['BUYCD'])) {

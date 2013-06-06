@@ -52,3 +52,28 @@ if ($cnt > 0) {
 		$nextlnk = "<a href='?start=$tmp&limit={$limit}&character=$character&search=$searchstr'>Next &gt;&gt;</a>";
 	}
 }
+
+$comingSongs = Song::getComingSongs(QUEUE_RULE);
+
+function requestable($song) 
+{
+    global $comingSongs;
+
+    $artistInQueue = false;
+    foreach ($comingSongs as $coming)
+    {
+        $artistInQueue |= ($coming->artist === $song->artist);
+    }
+
+    $now = new DateTime();
+    $track = DateTime::createFromFormat('Y-m-d H:i:s', $song->date_played);
+    $track_available = $track->add(new DateInterval('PT'.TRACK_RULE.'M'));
+    $artist = DateTime::createFromFormat('Y-m-d H:i:s', $song->date_artist_played);
+    $artist_available = $artist->add(new DateInterval('PT'.ARTIST_RULE.'M'));
+    $album = DateTime::createFromFormat('Y-m-d H:i:s', $song->date_album_played);
+    $album_available = $album->add(new DateInterval('PT'.ALBUM_RULE.'M'));
+    $title = DateTime::createFromFormat('Y-m-d H:i:s', $song->date_title_played);
+    $title_available = $title->add(new DateInterval('PT'.TITLE_RULE.'M'));
+
+    return (($now > $track_available) && ($now > $title_available) && ($now > $artist_available) && ($now > $album_available)) && !($artistInQueue);
+}

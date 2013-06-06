@@ -92,11 +92,15 @@
 									<?php endif; ?>
 								</td>
 								<td align="center">
-									<?php if (ALLOW_REQUESTS) : ?>
-									<a href="javascript:request(<?php echo $playlistSong->ID; ?>);">
-										<img src="images/request.png" alt="Request this track now!" title="Request this track now!"/>
-									</a>
-									<?php endif; ?>
+                                    <?php if (ALLOW_REQUESTS && requestable($playlistSong)) : ?>
+                                    <a href="javascript:request(<?php echo $playlistSong->ID; ?>);">
+                                        <img src="images/request.png" alt="Request this track now!" title="Request this track now!"/>
+                                    </a>
+                                    <?php else : ?>
+                                    <div style="width: 67px; float: left;">
+                                        <img src="images/No_Entry.png" style="height: 23px;" alt="Track currently not requestable!" title="Track currently not requestable!"/>
+                                    </div>
+                                    <?php endif; ?>
 									<a href="<?php echo $playlistSong->buycd; ?>" target="_blank">
 										<img src="images/buy.png" alt="Buy this CD or Track now!" title="Buy this CD or Track now!"/>
 									</a>
