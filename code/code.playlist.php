@@ -6,6 +6,16 @@ include_once('classes/class.song.php');
 if (ALLOW_REQUESTS) {
 	// An array of song objects with the top requested songs
 	$topRequestedSongs = Song::getTopRequestedSongs();
+    
+    if (REQUESTLIST_RULE) 
+    {
+        // An array of ids that are currently in the Requestlist of SAM
+        $requestlist = Song::getRequestlistSongs();    
+    }
+    else 
+    {
+        $requestlist = array();
+    }    
 }
 
 $start = Def('start', 0);	// Where the playlist must start
@@ -53,16 +63,25 @@ if ($cnt > 0) {
 	}
 }
 
-$comingSongs = Song::getComingSongs(QUEUE_RULE);
+if (QUEUE_RULE > 0)
+{
+    $comingSongs = Song::getComingSongs(QUEUE_RULE);
+}
 
 function requestable($song) 
 {
-    global $comingSongs;
+    global $comingSongs, $requestlist;
 
     $artistInQueue = false;
     foreach ($comingSongs as $coming)
     {
         $artistInQueue |= ($coming->artist === $song->artist);
+    }
+
+    $songInRequestlist = false;
+    if (!!empty($requestlist))
+    {
+        $songInRequestlist = array_key_exists($song->ID, $requestlist);
     }
 
     $now = new DateTime();
@@ -75,5 +94,7 @@ function requestable($song)
     $title = DateTime::createFromFormat('Y-m-d H:i:s', $song->date_title_played);
     $title_available = $title->add(new DateInterval('PT'.TITLE_RULE.'M'));
 
-    return (($now > $track_available) && ($now > $title_available) && ($now > $artist_available) && ($now > $album_available)) && !($artistInQueue);
+    $songInRequestlist = $songInRequestlist && REQUESTLIST_RULE;
+
+    return (($now > $track_available) && ($now > $title_available) && ($now > $artist_available) && ($now > $album_available)) && !($artistInQueue) && !($songInRequestlist);
 }

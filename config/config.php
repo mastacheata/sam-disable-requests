@@ -172,6 +172,13 @@ QUEUE RULE
 */
 define('QUEUE_RULE', 100);    
 
+/*
+REQUESTLIST RULE
+    Do not allow track to be requested if it's already in the Request List.
+    Set this to true to enable checks against the requestlist or to false in order to skip this check
+*/
+define('REQUESTLIST_RULE', TRUE);    
+
 ## ============================================================ ##
 
 // The Singleton Database class

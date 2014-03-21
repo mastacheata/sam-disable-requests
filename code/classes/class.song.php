@@ -124,6 +124,8 @@ class Song {
 								array('ID', 'songtype', 'date_played', 'duration',
 										'artist', 'title', 'album', 'albumyear',
 										'genre', 'website', 'buycd', 'picture',
+										'date_artist_played', 'date_album_played',
+										'date_title_played',
 										'cnt' => new Zend_Db_Expr('('.$sub_select->__toString().')')))
 						 ->join(array('r' => 'requestlist'),
 								'r.songID = s.ID',
@@ -303,6 +305,33 @@ class Song {
 			exit;
 		}
 		return $song;
+	}
+
+	public static function getRequestlistSongs() {
+		$db = Database::getInstance();
+		$db->setFetchMode(Zend_Db::FETCH_ASSOC);
+
+		$requestlist = array();
+
+		try {
+			$select_where = $db->select()
+								->from(array('r' => 'requestlist'), array('songID'))
+								->where('code = ?', 200)
+								->where('status = ?', 'new');
+			
+			$stmt = $select_where->query();
+			$result = $stmt->fetchAll();
+
+			foreach($result as $row => $data)
+			{
+				$requestlist[$data['SONGID']] = true;
+			}
+		} catch (Zend_Db_Adapter_Exception $ex) {
+			echo "Please verify database settings.<br />";
+			exit;
+		}
+
+		return $requestlist;
 	}
 
 	public function setValues($songinfo) {
