@@ -6,16 +6,16 @@ include_once('classes/class.song.php');
 if (ALLOW_REQUESTS) {
 	// An array of song objects with the top requested songs
 	$topRequestedSongs = Song::getTopRequestedSongs();
-    
-    if (REQUESTLIST_RULE) 
+
+    if (REQUESTLIST_RULE)
     {
         // An array of ids that are currently in the Requestlist of SAM
-        $requestlist = Song::getRequestlistSongs();    
+        $requestlist = Song::getRequestlistSongs();
     }
-    else 
+    else
     {
         $requestlist = array();
-    }    
+    }
 }
 
 $start = Def('start', 0);	// Where the playlist must start
@@ -68,7 +68,7 @@ if (QUEUE_RULE > 0)
     $comingSongs = Song::getComingSongs(QUEUE_RULE);
 }
 
-function requestable($song) 
+function requestable($song)
 {
     global $comingSongs, $requestlist;
 
@@ -79,7 +79,7 @@ function requestable($song)
     }
 
     $songInRequestlist = false;
-    if (!!empty($requestlist))
+    if (!empty($requestlist))
     {
         $songInRequestlist = array_key_exists($song->ID, $requestlist);
     }
