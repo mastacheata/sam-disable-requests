@@ -32,8 +32,9 @@ class Song {
 	public $isRequested;
 	public $dedicationName;
 	public $dedicationMessage;
+    public $available;
 
-	public static function getComingSongs() {
+	public static function getComingSongs($limit = COMING_UP_COUNT) {
 		$db = Database::getInstance();
 
 		// Return tracks in the queuelist table
@@ -45,7 +46,7 @@ class Song {
 							array('requestID'))
 					 ->where('s.songtype = ?', 'S') //Only return song of type S
 					 ->order('q.sortID ASC')
-					 ->limit(COMING_UP_COUNT);
+					 ->limit($limit);
 
 		$songs = array();
 		try {
@@ -192,10 +193,10 @@ class Song {
 
 			$select_where->where(implode(' OR ', $orWhere));
 		}
-		
+
 		if ($sort_letter == '0 - 9') {
 			$select_where->where($db->quoteInto('NOT((artist>=?)', 'A') . ' AND ' . $db->quoteInto('(artist<?))', 'ZZZZZZZZZZZ'));
-		} elseif ($sort_letter != '') {		
+		} elseif ($sort_letter != '') {
 			$nextletter = chr(ord($sort_letter) + 1);
 			$select_where->where($db->quoteInto('(artist>=?)', $sort_letter) . ' AND ' . $db->quoteInto('(artist<?)', $nextletter));
 		}
@@ -307,7 +308,7 @@ class Song {
 		return $song;
 	}
 
-	public static function getRequestlistSongs() {
+	public static function getRequestedSongs($include = false) {
 		$db = Database::getInstance();
 		$db->setFetchMode(Zend_Db::FETCH_ASSOC);
 
@@ -316,16 +317,35 @@ class Song {
 		try {
 			$select_where = $db->select()
 								->from(array('r' => 'requestlist'), array('songID'))
-								->where('code = ?', 200)
-								->where('status = ?', 'new');
-			
+								->where('r.code = ?', 200)
+								->where('r.status = ?', 'new');
+
+            if ($include)
+            {
+                $select_where->join(array('s' => 'songlist'),
+                                's.ID = r.songID',
+                                array('artist', 'album'));
+            }
+
 			$stmt = $select_where->query();
 			$result = $stmt->fetchAll();
 
-			foreach($result as $row => $data)
-			{
-				$requestlist[$data['SONGID']] = true;
-			}
+            if ($include)
+            {
+                foreach($result as $row => $data)
+                {
+                    $requestlist[$data['SONGID']] = true;
+                    $requestlist['artist_'.hash('crc32b', $data['ARTIST'])] = true;
+                    $requestlist['album_'.hash('crc32b', $data['ALBUM'])] = true;
+                }
+            }
+            else
+            {
+                foreach($result as $row => $data)
+                {
+                    $requestlist[$data['SONGID']] = TRUE;
+                }
+            }
 		} catch (Zend_Db_Adapter_Exception $ex) {
 			echo "Please verify database settings.<br />";
 			exit;
@@ -397,7 +417,7 @@ class Song {
         }
 
         $this->date_title_played = $date_title_played;
-    }	
+    }
 
 	protected function set_buycd($song) {
 		if (empty($song['BUYCD'])) {

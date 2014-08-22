@@ -181,7 +181,7 @@ class ZendX_Db_Statement_Firebird extends Zend_Db_Statement
         if ($this->_stmtPrepared || $this->_stmtResult) {
             return ibase_errcode();
         }
-        return false;        
+        return false;
     }
 
     /**
@@ -234,20 +234,20 @@ class ZendX_Db_Statement_Firebird extends Zend_Db_Statement
         if ($retval === false) {
             $last_error = ibase_errmsg();
             $this->_stmtRowCount = 0;
-        }        
-        
+        }
+
         //Firebird php ibase extension, auto-commit is not after each call, but at
         //end of script. Disabled when transaction is active
         if (!$this->_adapter->getTransaction())
             ibase_commit_ret();
-            
+
         if ($retval === false) {
             /**
              * @see ZendX_Db_Statement_Firebird_Exception
              */
             require_once 'ZendX/Db/Statement/Firebird/Exception.php';
             throw new ZendX_Db_Statement_Firebird_Exception("Firebird statement execute error : " . $last_error);
-        }               
+        }
 
         // statements that have no result set do not return metadata
         if (is_resource($this->_stmtResult)) {
@@ -298,7 +298,7 @@ class ZendX_Db_Statement_Firebird extends Zend_Db_Statement
         if ($style === null) {
             $style = $this->_fetchMode;
         }
-        
+
         switch ($style) {
             case Zend_Db::FETCH_NUM:
                 $row = ibase_fetch_row($this->_stmtResult, IBASE_TEXT);

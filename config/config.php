@@ -144,25 +144,25 @@ define('CHECK_INTERVAL', 30000);
 /*
 ALBUM RULE
 	Do not play same album within xx minutes
-*/	
+*/
 define('ALBUM_RULE', 60);
 
 /*
 ARTIST RULE
 	Do not play same artist within xx minutes
-*/	
+*/
 define('ARTIST_RULE', 60);
 
 /*
 TITLE RULE
 	Do not play same title within xx minutes
-*/	
+*/
 define('TITLE_RULE', 60);
 
 /*
 TRACK RULE
 	Do not play same track within xx minutes
-*/	
+*/
 define('TRACK_RULE', 60);
 
 /*
@@ -170,14 +170,42 @@ QUEUE RULE
     Do not allow track to be requested if it's already in the queue.
     Define the maximum number of tracks to look ahead here. (If you want to disable this, set it to 0)
 */
-define('QUEUE_RULE', 100);    
+define('QUEUE_RULE', 100);
+
+/*
+QUEUE ALBUM RULE
+    Do not allow track to be requested if another track from the same Album is already in the Queue.
+    Set this to true to enable checks against the queuelist or to false in order to skip this check
+*/
+define('QUEUE_ALBUM_RULE', TRUE);
+
+/*
+QUEUE ARTIST RULE
+    Do not allow track to be requested if another track from the same Artist is already in the Request List.
+    Set this to true to enable checks against the queuelist or to false in order to skip this check
+*/
+define('QUEUE_ARTIST_RULE', TRUE);
 
 /*
 REQUESTLIST RULE
     Do not allow track to be requested if it's already in the Request List.
     Set this to true to enable checks against the requestlist or to false in order to skip this check
 */
-define('REQUESTLIST_RULE', TRUE);    
+define('REQUESTLIST_RULE', TRUE);
+
+/*
+REQUESTLIST ALBUM RULE
+    Do not allow track to be requested if another track from the same Album is already in the Request List.
+    Set this to true to enable checks against the requestlist or to false in order to skip this check
+*/
+define('REQUESTLIST_ALBUM_RULE', TRUE);
+
+/*
+REQUESTLIST ARTIST RULE
+    Do not allow track to be requested if another track from the same Artist is already in the Request List.
+    Set this to true to enable checks against the requestlist or to false in order to skip this check
+*/
+define('REQUESTLIST_ARTIST_RULE', TRUE);
 
 ## ============================================================ ##
 

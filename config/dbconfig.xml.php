@@ -1,4 +1,4 @@
-<?php/* 
+<?php/*
 <CONFIG application="SAM" version="4.9.8">
 	<Database>
 		<Driver>FIREBIRD</Driver>

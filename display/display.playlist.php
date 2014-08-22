@@ -18,7 +18,7 @@
 								<input type="submit" name="character" class="characterButton" value="All" onclick="document.forms.searchParameters.search.value=''"/>
 							</td>
 							<td>
-								<input <?php echo "0 - 9" == $character? "id='activeCharacter'" : "";?> type="submit" name="character" class="characterButton"value='0 - 9'/>
+								<input <?php echo "0 - 9" == $character? "id='activeCharacter'" : "";?> type="submit" name="character" class="characterButton" value='0 - 9'/>
 							</td>
 
 							<?php
@@ -94,15 +94,15 @@
 								<td align="center">
                                     <?php if (ALLOW_REQUESTS && requestable($playlistSong)) : ?>
                                     <a href="javascript:request(<?php echo $playlistSong->ID; ?>);">
-                                        <img src="images/request.png" alt="Request this track now!" title="Request this track now!"/>
+                                        <img src="images/request.png" alt="Request this track now!" title="Request this track now!" />
                                     </a>
                                     <?php else : ?>
                                     <div style="width: 67px; float: left;">
-                                        <img src="images/No_Entry.png" style="height: 23px;" alt="Track currently not requestable!" title="Track currently not requestable!"/>
+                                        <img src="images/No_Entry.png" style="height: 23px;" alt="Track currently not requestable!<?=!empty($playlistSong->available) ? $playlistSong->available : '';?>" title="Track currently not requestable!<?=!empty($playlistSong->available) ? $playlistSong->available : '';?>" />
                                     </div>
                                     <?php endif; ?>
 									<a href="<?php echo $playlistSong->buycd; ?>" target="_blank">
-										<img src="images/buy.png" alt="Buy this CD or Track now!" title="Buy this CD or Track now!"/>
+										<img src="images/buy.png" alt="Buy this CD or Track now!" title="Buy this CD or Track now!" />
 									</a>
 									<a href="<?php echo $playlistSong->website; ?>" target="_blank">
 										<img src="images/home.png" alt="Artist homepage" title="Artist homepage" />
