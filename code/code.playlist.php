@@ -77,10 +77,14 @@ function requestable($song)
 {
     global $comingSongs, $requestlist;
 
+    $songInQueue = false;
     $artistInQueue = false;
+    $albumInQueue = false;
     foreach ($comingSongs as $coming)
     {
+        $songInQueue |= ($coming->title === $song->title);
         $artistInQueue |= ($coming->artist === $song->artist);
+        $albumInQueue |= ($coming->album === $song->album);
     }
 
     $songInRequestlist = false;
@@ -112,8 +116,40 @@ function requestable($song)
     }
 
     $songInRequestlist = $songInRequestlist && REQUESTLIST_RULE;
-    $artistInRequestlist = $artistInRequestlist && REQUESTLIST_ARTIST_RULE;
-    $albumInRequestlist = $albumInRequestlist && REQUESTLIST_ALBUM_RULE;
+    if ($songInRequestlist)
+    {
+        $song->available = ' Requested track already in list';
+    }
 
-    return $timeRule && !($artistInQueue) && !($songInRequestlist) && !($artistInRequestlist) && !($albumInRequestlist);
+    $artistInRequestlist = $artistInRequestlist && REQUESTLIST_ARTIST_RULE;
+    if ($artistInRequestlist)
+    {
+        $song->available = ' Requested artist already in list';
+    }
+
+    $albumInRequestlist = $albumInRequestlist && REQUESTLIST_ALBUM_RULE;
+    if ($albumInRequestlist)
+    {
+        $song->available = ' Requested album already in list';
+    }
+
+    $songInQueue = $songInQueue && QUEUE_RULE;
+    if ($songInQueue)
+    {
+        $song->available = 'Requested track already in queue';
+    }
+
+    $artistInQueue = $artistInQueue && QUEUE_ARTIST_RULE;
+    if ($songInQueue)
+    {
+        $song->available = ' Requested artist already in queue';
+    }
+
+    $albumInQueue = $albumInQueue && QUEUE_ALBUM_RULE;
+    if ($albumInQueue)
+    {
+        $song->available = ' Requested album already in queue';
+    }
+
+    return $timeRule && !($songInQueue) && !($artistInQueue) && !($albumInQueue) && !($songInRequestlist) && !($artistInRequestlist) && !($albumInRequestlist);
 }
